@@ -1,0 +1,75 @@
+<div class="container">
+    <div class="col d-flex justify-content-center">
+        <div class="card mt-4 z-depth-1 d-flex w-25">
+            <div class="col-sm-12">
+                <div class="card mt-4 mb-4">
+                    <h3
+                        class="card-header light-blue lighten-1 white-text text-uppercase font-weight-bold text-center py-2">
+                       Login
+                    </h3>
+                    <div class="card-body">
+                        <form #loginForm="ngForm">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Role:<span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-control" required
+                                            [ngClass]="[role.invalid && role.touched ? 'HasError' : '']" required
+                                            name="role" [(ngModel)]="LoginModel.role" #role="ngModel">
+                                            <option value="">Select</option>
+                                            <option *ngFor="let type of RoleList;trackBy: trackByMethod"
+                                                value="{{type.value}}">{{type.value}}
+                                            </option>
+                                        </select>
+                                        <span class="text-danger" *ngIf="role.touched && role.invalid">Please select
+                                            role</span>
+                                    </div>
+                                </div>
+                             
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Username:<span
+                                                class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" required
+                                            placeholder="enter your email"
+                                            [ngClass]="[email.invalid && email.touched ? 'HasError' : '']" required
+                                            name="email" [(ngModel)]="LoginModel.email" #email="ngModel">
+                                        <span class="text-danger" *ngIf="email.touched && email.invalid">Please enter
+                                            username</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Password:<span
+                                                class="text-danger">*</span></label>
+                                        <input type="password" class="form-control" required
+                                            placeholder="enter your password"
+                                            [ngClass]="[password.invalid && password.touched ? 'HasError' : '']" required
+                                            name="password" [(ngModel)]="LoginModel.password" #password="ngModel">
+                                        <span class="text-danger" *ngIf="password.touched && password.invalid">Please enter
+                                            userid</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <hr>
+                            <div class="row justify-content-center">
+                                <button type="button" class="btn btn-primary btn-sm" [disabled]="loginForm.invalid"
+                                    (click)="LoginAuthentication(loginForm.value,loginForm)"><i
+                                        class="fa fa-paper-plane"></i> Login</button>
+                                        <span class="text-danger" *ngIf="errorMsg">{{errorMsg}}</span>
+                                        
+                            </div>
+                            <div class="class text-center mt-2">
+                                <p>Not a member? <a  routerLink="/registration">Register</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

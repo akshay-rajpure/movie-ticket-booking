@@ -1,0 +1,113 @@
+<div class="col-sm-12 justify-content-center">
+    <div class="col d-flex justify-content-center">
+        <div class="card mt-4 mb-4 d-flex w-50">
+            <h3 class="card-header light-blue lighten-1 white-text text-uppercase font-weight-bold text-center py-2">
+                Registration
+            </h3>
+            <div class="card-body">
+                <form #RegistrationForm="ngForm">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Role:<span class="text-danger">*</span></label>
+                                <select class="form-control" required
+                                    [ngClass]="[role.invalid && role.touched ? 'HasError' : '']" required name="role"
+                                    [(ngModel)]="RegistrationModel.role" #role="ngModel">
+                                    <option value="">Select</option>
+                                    <option *ngFor="let type of RoleList;trackBy: trackByMethod" value="{{type.value}}">
+                                        {{type.value}}
+                                    </option>
+                                </select>
+                                <span class="text-danger" *ngIf="role.touched && role.invalid">Please select
+                                    role</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">First Name:<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required placeholder="enter first name"
+                                    [ngClass]="[fname.invalid && fname.touched ? 'HasError' : '']" required name="fname"
+                                    [(ngModel)]="RegistrationModel.fname" #fname="ngModel" autocomplete="off">
+                                <span class="text-danger" *ngIf="fname.touched && fname.invalid">Please enter
+                                    first name</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Last Name:<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required placeholder="enter lname name"
+                                    [ngClass]="[lname.invalid && lname.touched ? 'HasError' : '']" required name="lname"
+                                    [(ngModel)]="RegistrationModel.lname" #lname="ngModel" autocomplete="off">
+                                <span class="text-danger" *ngIf="lname.touched && lname.invalid">Please enter
+                                    last name</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Email:<span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" required
+                                    [ngClass]="[email.invalid && email.touched ? 'HasError' : '']" required name="email"
+                                    [(ngModel)]="RegistrationModel.email" placeholder="enter email" #email="ngModel"
+                                    autocomplete="off">
+                                <span class="text-danger" *ngIf="email.touched && email.invalid">Please enter
+                                    email</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Mobile:<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" placeholder="enter 10 digit mobile number"
+                                    required [ngClass]="[phone.invalid && phone.touched ? 'HasError' : '']" name="phone"
+                                    [(ngModel)]="RegistrationModel.phone" #phone="ngModel" minlength="10" maxlength="10"
+                                    autocomplete="off">
+                                <span class="text-danger" *ngIf="phone.touched && phone.invalid">Please enter
+                                    mobile number</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group mt-4">
+                                <label for="exampleFormControlSelect1">Gender:<span
+                                        class="text-danger">*</span></label>&nbsp;
+                                <div class="form-check form-check-inline" *ngFor="let data of genderList">
+                                    <input class="form-check-input" name="gender" type="radio" name="gender"
+                                        value="{{data.value}}" [(ngModel)]="RegistrationModel.gender"
+                                        #gender="ngModel" />
+                                    <label class="form-check-label" for="inlineRadio1">{{data.value}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Password:<span
+                                        class="text-danger">*</span></label>
+                                <input type="password" class="form-control" required
+                                    [ngClass]="[password.invalid && password.touched ? 'HasError' : '']" required
+                                    name="password" [(ngModel)]="RegistrationModel.password" #password="ngModel" autocomplete="off" placeholder="enter password">
+                                <span class="text-danger" *ngIf="password.touched && password.invalid">Please enter
+                                    password</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row justify-content-center">
+                        <button type="button" class="btn btn-primary btn-sm"
+                            [disabled]="RegistrationForm.invalid || !RegistrationModel.gender"
+                            (click)="CreateRegistration(RegistrationForm.value,RegistrationForm)"><i
+                                class="fa fa-paper-plane"></i> Submit</button>
+
+                    </div>
+                    <div class="text-center mt-2">
+                        <p>Already a member? <a routerLink="" href="">Login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>

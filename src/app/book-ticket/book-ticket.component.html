@@ -1,0 +1,201 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+          <li class="nav-item item-align" *ngIf="loggedinDetails.role === 'User'">
+              <a class="nav-link" routerLink="/book-ticket" routerLinkActive="active">Book Ticket
+              </a>
+          </li>
+          <li class="nav-item item-align" *ngIf="loggedinDetails.role === 'Admin'">
+              <a class="nav-link" routerLink="/ticket-history" routerLinkActive="active">Ticket/Users History
+              </a>
+          </li>
+          <li class="nav-item item-align" *ngIf="loggedinDetails.role === 'User'">
+              <a class="nav-link" routerLink="/ticket-history" routerLinkActive="active">Ticket History
+              </a>
+          </li>
+          <li class="nav-item item-align" *ngIf="loggedinDetails.role === 'Admin'">
+              <a class="nav-link" routerLink="/movie-master" routerLinkActive="active">Movie Details</a>
+          </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+          <span (click)="logout()"><a class="nav-link text-white">Logout</a></span>
+      </form>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="card mt-4 mb-4">
+    <h3 class="card-header light-blue lighten-1 white-text text-uppercase font-weight-bold text-center py-2">
+      Book New Ticket
+    </h3>
+    <form #MovieBookingForm="ngForm">
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="card mt-2 mb-2 ml-2">
+            <h3 class="card-header light-blue lighten-1 white-text text-uppercase font-weight-bold text-center py-2">
+              Movie Details
+            </h3>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Select Movie:<span class="text-danger">*</span></label>
+                    <select class="form-control" required
+                      [ngClass]="[movieId.invalid && movieId.touched ? 'HasError' : '']" required name="movieId"
+                      [(ngModel)]="MovieBooking.movieId" #movieId="ngModel"
+                      (change)="GetMovieDetails($event.target.value)">
+                      <option value="">Select</option>
+                      <option *ngFor="let data of MovieList;trackBy: trackByMethod" value="{{data._id}}">
+                        {{data.name}}
+                      </option>
+                    </select>
+                    <span class="text-danger" *ngIf="movieId.touched && movieId.invalid">Please select movie
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Movie Date:<span class="text-danger">*</span></label>
+                    <input type="date" class="form-control"
+                      [ngClass]="[movieDate.invalid && movieDate.touched ? 'HasError' : '']" required name="movieDate"
+                      [(ngModel)]="MovieBooking.movieDate" #movieDate="ngModel" [disabled]="true">
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">No of seats:<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" required placeholder="enter number of people"
+                      [ngClass]="[seats.invalid && seats.touched ? 'HasError' : '']" name="seats"
+                      [(ngModel)]="MovieBooking.seats" #seats="ngModel" (input)="TotalAmount(MovieBooking.seats)"
+                      [disabled]="!MovieBooking.movieId" min="1">
+                    <span class="text-danger" *ngIf="seats.touched && seats.invalid">Please enter number of seats</span>
+                  </div>
+                </div>
+              </div>
+              <div class="class row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Ticket Amount:<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" placeholder="ticket amount"
+                      [ngClass]="[ticketAmount.invalid && ticketAmount.touched ? 'HasError' : '']" name="ticketAmount"
+                      [(ngModel)]="MovieBooking.ticketAmount" #ticketAmount="ngModel" [disabled]="true" required>
+                    <span class="text-danger" *ngIf="ticketAmount.touched && ticketAmount.invalid">Please enter
+                      amount</span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Total Amount:<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" placeholder="total amount"
+                      [ngClass]="[totalAmount.invalid && totalAmount.touched ? 'HasError' : '']" name="totalAmount"
+                      [(ngModel)]="MovieBooking.totalAmount" #totalAmount="ngModel" [disabled]="true" required>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Show Time:<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" placeholder="show time"
+                      [ngClass]="[movieTime.invalid && movieTime.touched ? 'HasError' : '']" name="movieTime"
+                      [(ngModel)]="MovieBooking.movieTime" #movieTime="ngModel" [disabled]="true" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card mt-2 mb-2 mr-2">
+            <h3 class="card-header light-blue lighten-1 white-text text-uppercase font-weight-bold text-center py-2">
+              Payment Details
+            </h3>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Payment Type:<span class="text-danger">*</span></label>
+                    <select class="form-control" required
+                      [ngClass]="[paymentType.invalid && paymentType.touched ? 'HasError' : '']" required
+                      name="paymentType" [(ngModel)]="MovieBooking.paymentType" #paymentType="ngModel">
+                      <option value="">Select</option>
+                      <option value="Debit Card">
+                        Debit Card
+                      </option>
+                    </select>
+                    <span class="text-danger" *ngIf="paymentType.touched && paymentType.invalid">Please select payment
+                      type
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Bank Name:<span class="text-danger">*</span></label>
+                    <select class="form-control" required
+                      [ngClass]="[bankName.invalid && bankName.touched ? 'HasError' : '']" required name="bankName"
+                      [(ngModel)]="MovieBooking.bankName" #bankName="ngModel">
+                      <option value="">Select</option>
+                      <option value="{{data.value}}" *ngFor="let data of BankList;trackBy: trackByMethod">
+                        {{data.value}}
+                      </option>
+                    </select>
+                    <span class="text-danger" *ngIf="bankName.touched && bankName.invalid">Please select bank
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Card Number:<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" required placeholder="16 digit card number"
+                      [ngClass]="[cardNo.invalid && cardNo.touched ? 'HasError' : '']" required name="seats"
+                      [(ngModel)]="MovieBooking.cardNo" #cardNo="ngModel" minlength="16" maxlength="16">
+                    <span class="text-danger" *ngIf="cardNo.touched && cardNo.invalid">Please enter 16 digit card
+                      number</span>
+                  </div>
+                </div>
+              </div>
+              <div class="class row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Name on Card:<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" placeholder="enter name as per your card"
+                      [ngClass]="[accountHolderName.invalid && accountHolderName.touched ? 'HasError' : '']"
+                      name="accountHolderName" [(ngModel)]="MovieBooking.accountHolderName" #accountHolderName="ngModel"
+                      required>
+                    <span class="text-danger" *ngIf="accountHolderName.touched && accountHolderName.invalid">Please
+                      enter
+                      name as per printed on card</span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">CVV:<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" placeholder="enter 3 digit cvv number"
+                      [ngClass]="[cvv.invalid && cvv.touched ? 'HasError' : '']" name="cvv"
+                      [(ngModel)]="MovieBooking.cvv" #cvv="ngModel" required minlength="3" maxlength="3" min="0">
+                    <span class="text-danger" *ngIf="cvv.touched && cvv.invalid">Please enter
+                      3 digit cvv number</span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Expiry Date:<span class="text-danger">*</span></label>
+                    <input type="date" class="form-control"
+                      [ngClass]="[expiryDate.invalid && expiryDate.touched ? 'HasError' : '']" required
+                      name="expiryDate" [(ngModel)]="MovieBooking.expiryDate" #expiryDate="ngModel">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row justify-content-center">
+        <button type="button" class="btn btn-primary btn-sm mb-4" [disabled]="MovieBookingForm.invalid || !MovieBooking.seats"
+          (click)="BookTicket(MovieBookingForm)"><i class="fa fa-paper-plane"></i> Book
+          Ticket</button>
+      </div>
+    </form>
+  </div>
+
+
+</div>

@@ -1,0 +1,191 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item item-align" *ngIf="loggedinDetails.role === 'User'">
+        <a class="nav-link" routerLink="/book-ticket" routerLinkActive="active">Book Ticket
+        </a>
+      </li>
+      <li class="nav-item item-align" *ngIf="loggedinDetails.role === 'Admin'">
+        <a class="nav-link" routerLink="/ticket-history" routerLinkActive="active">Ticket/Users History
+        </a>
+      </li>
+      <li class="nav-item item-align" *ngIf="loggedinDetails.role === 'User'">
+        <a class="nav-link" routerLink="/ticket-history" routerLinkActive="active">Ticket History
+        </a>
+      </li>
+      <li class="nav-item item-align" *ngIf="loggedinDetails.role === 'Admin'">
+        <a class="nav-link" routerLink="/movie-master" routerLinkActive="active">Movie Details</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <span (click)="logout()"><a class="nav-link text-white">Logout</a></span>
+    </form>
+  </div>
+</nav>
+
+
+
+<div class="container justify-content-center">
+  <div class="row">
+    <div class="card col-sm-12 mt-4 z-depth-1">
+      <div class="col-sm-12">
+        <div class="card mt-4 mb-4">
+          <h3 class="card-header light-blue lighten-1 white-text text-uppercase font-weight-bold text-center py-2">
+            Movie Manager
+          </h3>
+          <div class="card-body">
+            <form #CreateMovieForm="ngForm">
+              <div class="row">
+                <div class="col-sm-6">
+                  <strong>{{heading}}</strong>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Movie Name:<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" required placeholder="enter movie name"
+                      [ngClass]="[name.invalid && name.touched ? 'HasError' : '']" required name="name"
+                      [(ngModel)]="CreateMovie.name" #name="ngModel">
+                    <span class="text-danger" *ngIf="name.touched && name.invalid">Please enter movie name</span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Start Time:<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" required placeholder="enter start time"
+                      [ngClass]="[startTime.invalid && startTime.touched ? 'HasError' : '']" required name="startTime"
+                      [(ngModel)]="CreateMovie.startTime" #startTime="ngModel">
+                    <span class="text-danger" *ngIf="startTime.touched && startTime.invalid">Please enter start
+                      time</span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Select startMeridiem:<span
+                        class="text-danger">*</span></label>
+                    <select class="form-control" required
+                      [ngClass]="[startMeridiem.invalid && startMeridiem.touched ? 'HasError' : '']" required
+                      name="startMeridiem" [(ngModel)]="CreateMovie.startMeridiem" #startMeridiem="ngModel">
+                      <option value="">Select</option>
+                      <option *ngFor="let data of MeridiemList;trackBy: trackByMethod" value="{{data.value}}">
+                        {{data.value}}
+                      </option>
+                    </select>
+                    <span class="text-danger" *ngIf="startMeridiem.touched && startMeridiem.invalid">Field
+                      Required</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">End Time:<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" required placeholder="enter start time"
+                      [ngClass]="[endTime.invalid && endTime.touched ? 'HasError' : '']" required name="endTime"
+                      [(ngModel)]="CreateMovie.endTime" #endTime="ngModel">
+                    <span class="text-danger" *ngIf="endTime.touched && endTime.invalid">Please enter end time</span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Select endMeridiem:<span class="text-danger">*</span></label>
+                    <select class="form-control" required
+                      [ngClass]="[endMeridiem.invalid && endMeridiem.touched ? 'HasError' : '']" required
+                      name="endMeridiem" [(ngModel)]="CreateMovie.endMeridiem" #endMeridiem="ngModel">
+                      <option value="">Select</option>
+                      <option *ngFor="let data of MeridiemList;trackBy: trackByMethod" value="{{data.value}}">
+                        {{data.value}}
+                      </option>
+                    </select>
+                    <span class="text-danger" *ngIf="endMeridiem.touched && endMeridiem.invalid">Field Required</span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Show Date:<span class="text-danger">*</span></label>
+                    <input type="date" class="form-control" required
+                      [ngClass]="[showDate.invalid && showDate.touched ? 'HasError' : '']" required name="showDate"
+                      [(ngModel)]="CreateMovie.showDate" #showDate="ngModel">
+                    <span class="text-danger" *ngIf="showDate.touched && showDate.invalid">Please select
+                      Date</span>
+                  </div>
+                </div>
+              </div>
+              <div class="class row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Ticket Amount:<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" placeholder="ticket amount" required
+                      [ngClass]="[ticketAmount.invalid && ticketAmount.touched ? 'HasError' : '']" required
+                      name="ticketAmount" [(ngModel)]="CreateMovie.ticketAmount" #ticketAmount="ngModel">
+                    <span class="text-danger" *ngIf="ticketAmount.touched && ticketAmount.invalid">Please enter
+                      amount</span>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div class="row justify-content-center">
+                <button type="button" class="btn btn-primary btn-sm" [disabled]="CreateMovieForm.invalid"
+                  (click)="AddMovie(CreateMovieForm.value,CreateMovieForm)" *ngIf="!IsUpdate"><i
+                    class="fa fa-paper-plane"></i> Add new
+                  movie</button>
+                <button type="button" class="btn btn-primary btn-smcls" [disabled]="CreateMovieForm.invalid"
+                  (click)="UpdateMovie(CreateMovieForm)" *ngIf="IsUpdate"><i class="fa fa-edit"></i> Done</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 mb-4">
+        <div class="card mt-2">
+          <h3 class="card-header light-blue lighten-1 white-text text-uppercase font-weight-bold text-center py-2">
+            Movie Details
+          </h3>
+          <div class="card-body">
+            <input type="text" class="form-control w-25 mb-2" placeholder="Search here" [(ngModel)]="searchMovies">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">SR No</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Start Time</th>
+                    <th scope="col">End Time</th>
+                    <th scope="col">Show Date</th>
+                    <th scope="col">Ticket Amount</th>
+                    <th scope="col">Edit/Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let data of movieList |filter:searchMovies; paginate: { itemsPerPage: 5, currentPage: MoviePagination }; let i=index;trackBy: trackByMethod">
+                    <td>{{i+1}}</td>
+                    <td>{{data.name}}</td>
+                    <td>{{data.startTime}}{{data.startMeridiem}}</td>
+                    <td>{{data.endTime}}{{data.endMeridiem}}</td>
+                    <td>{{data.showDate | date: 'dd/MM/yyyy'}}</td>
+                    <td>{{data.ticketAmount}}</td>
+
+                    <td><span (click)="EditMovieDetails(data)"><i class="fas fa-edit text-danger pointer"
+                          [ngbTooltip]="tipContent"></i></span> &nbsp; <span (click)="DeleteMovie(data)"><i
+                          class="fas fa-trash-alt text-danger pointer"></i></span></td>
+                  </tr>
+                </tbody>
+              </table>
+              <tfoot class="pull-right" *ngIf="movieList.length>5">
+                <pagination-controls (pageChange)="MoviePagination = $event">
+                </pagination-controls>
+              </tfoot>
+              <div class="col-sm-12 text-center mt-4">
+                <strong class="text-danger" *ngIf="movieList && movieList.length===0">No
+                  Data
+                  Found</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

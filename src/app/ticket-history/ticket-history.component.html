@@ -1,0 +1,117 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item item-align" *ngIf="loggedinDetails.role === 'User'">
+                <a class="nav-link" routerLink="/book-ticket" routerLinkActive="active">Book Ticket
+                </a>
+            </li>
+            <li class="nav-item item-align" *ngIf="loggedinDetails.role === 'Admin'">
+                <a class="nav-link" routerLink="/ticket-history" routerLinkActive="active">Ticket/Users History
+                </a>
+            </li>
+            <li class="nav-item item-align" *ngIf="loggedinDetails.role === 'User'">
+                <a class="nav-link" routerLink="/ticket-history" routerLinkActive="active">Ticket History
+                </a>
+            </li>
+            <li class="nav-item item-align" *ngIf="loggedinDetails.role === 'Admin'">
+                <a class="nav-link" routerLink="/movie-master" routerLinkActive="active">Movie Details</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <span (click)="logout()"><a class="nav-link text-white">Logout</a></span>
+        </form>
+    </div>
+  </nav>
+
+
+<div class="col-sm-12 mb-4">
+    <div class="card mt-2">
+        <h3 class="card-header light-blue lighten-1 white-text text-uppercase font-weight-bold text-center py-2">
+            Booked Ticket History
+        </h3>
+        <div class="card-body">
+            <input type="text" class="form-control w-25 mb-2" placeholder="Search here" [(ngModel)]="searchTicket">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">SR No</th>
+                            <th scope="col">Movie Id</th>
+                            <th scope="col">Movie Date</th>
+                            <th scope="col">Seats</th>
+                            <th scope="col">Total Amount</th>
+                            <th scope="col">Booked On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let data of TicketList |filter:searchTicket ;paginate: { itemsPerPage: 5, currentPage: HistoryPagination }; let i=index;trackBy: trackByMethod">
+                            <td>{{i+1}}</td>
+                            <td>{{data.movieId}}</td>
+                            <td>{{data.movieDate | date: 'dd/MM/yyyy'}}</td>
+                            <td>{{data.seats}}</td>
+                            <td>{{data.totalAmount}}</td>
+                            <td>{{data.CreatedOn | date: 'dd/MM/yyyy'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <tfoot class="pull-right">
+                    <pagination-controls (pageChange)="HistoryPagination = $event">
+                    </pagination-controls>
+                </tfoot>
+                <div class="col-sm-12 text-center mt-4">
+                    <strong class="text-danger" *ngIf="TicketList && TicketList.length===0">No
+                        Data
+                        Found</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-sm-12 mb-4" *ngIf="loggedinDetails.role === 'Admin'">
+    <div class="card mt-2">
+        <h3 class="card-header light-blue lighten-1 white-text text-uppercase font-weight-bold text-center py-2">
+            Registered Users
+        </h3>
+        <div class="card-body">
+            <input type="text" class="form-control w-25 mb-2" placeholder="Search here" [(ngModel)]="searchUsers">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">SR No</th>
+                            <th scope="col">Full Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Gender</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Registered On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let data of RegiteredUserList  |filter:searchUsers; paginate: { itemsPerPage: 5, currentPage: RegisteredUserPagination }; let i=index;trackBy: trackByMethod">
+                            <td>{{i+1}}</td>
+                            <td>{{data.firstname}} {{data.lastname}}</td>
+                            <td>{{data.email}}</td>
+                            <td>{{data.phone}}</td>
+                            <td>{{data.gender}}</td>
+                            <td>{{data.role}}</td>
+                            <td>{{data.date | date: 'dd/MM/yyyy'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <tfoot class="pull-right">
+                    <pagination-controls (pageChange)="RegisteredUserPagination = $event">
+                    </pagination-controls>
+                </tfoot>
+                <div class="col-sm-12 text-center mt-4">
+                    <strong class="text-danger" *ngIf="RegiteredUserList && RegiteredUserList.length===0">No
+                        Data
+                        Found</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
